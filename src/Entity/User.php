@@ -54,10 +54,9 @@ class User implements UserInterface
     private $telephone;
 
     /**
-     * @ORM\OneToMany(targetEntity=Role::class, mappedBy="user")
+     * @ORM\ManyToOne(targetEntity=Role::class, inversedBy="users")
      */
     private $role;
-
     public function __construct()
     {
         $this->role = new ArrayCollection();
@@ -175,32 +174,14 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Role[]
-     */
-    public function getRole(): Collection
+    public function getRole(): ?Role
     {
         return $this->role;
     }
 
-    public function addRole(Role $role): self
+    public function setRole(?Role $role): self
     {
-        if (!$this->role->contains($role)) {
-            $this->role[] = $role;
-            $role->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRole(Role $role): self
-    {
-        if ($this->role->removeElement($role)) {
-            // set the owning side to null (unless already changed)
-            if ($role->getUser() === $this) {
-                $role->setUser(null);
-            }
-        }
+        $this->role = $role;
 
         return $this;
     }

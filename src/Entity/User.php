@@ -57,9 +57,15 @@ class User implements UserInterface
      * @ORM\ManyToOne(targetEntity=Role::class, inversedBy="users")
      */
     private $role;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Resto::class, mappedBy="user")
+     */
+    private $resto;
     public function __construct()
     {
         $this->role = new ArrayCollection();
+        $this->resto = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -182,6 +188,36 @@ class User implements UserInterface
     public function setRole(?Role $role): self
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Resto[]
+     */
+    public function getResto(): Collection
+    {
+        return $this->resto;
+    }
+
+    public function addResto(Resto $resto): self
+    {
+        if (!$this->resto->contains($resto)) {
+            $this->resto[] = $resto;
+            $resto->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeResto(Resto $resto): self
+    {
+        if ($this->resto->removeElement($resto)) {
+            // set the owning side to null (unless already changed)
+            if ($resto->getUser() === $this) {
+                $resto->setUser(null);
+            }
+        }
 
         return $this;
     }

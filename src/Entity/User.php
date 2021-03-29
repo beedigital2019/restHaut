@@ -64,10 +64,17 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Resto::class, mappedBy="user")
      */
     private $resto;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Table::class, mappedBy="user")
+     */
+    private $tables;
+
     public function __construct()
     {
         $this->role = new ArrayCollection();
         $this->resto = new ArrayCollection();
+        $this->tables = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -223,4 +230,35 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection|Table[]
+     */
+    public function getTables(): Collection
+    {
+        return $this->tables;
+    }
+
+    public function addTable(Table $table): self
+    {
+        if (!$this->tables->contains($table)) {
+            $this->tables[] = $table;
+            $table->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTable(Table $table): self
+    {
+        if ($this->tables->removeElement($table)) {
+            // set the owning side to null (unless already changed)
+            if ($table->getUser() === $this) {
+                $table->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

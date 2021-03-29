@@ -62,7 +62,8 @@ class NewRestoController extends AbstractController
             $resto->setNomResto($values->nomResto)
                   ->setDescription($values->description)
                   ->setUser($userCreateur)
-                  ->setAdresse($values->adresse);
+                  ->setAdresse($values->adresse)
+                  ->setImage($values->image);
             $manager->persist($resto);
             $manager->flush();
             $data = [
